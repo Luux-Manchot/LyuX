@@ -59,11 +59,11 @@ function Configure-LyuXVM {
     & $VBox unattended install $VmName `
         --iso=$IsoFile `
         --user="lyux-admin" `
-        --user-password="LyuxDeploy2026!" `
+        --user-password="LyuxAdmin2026!" `
         --country="FR" `
         --time-zone="Europe/Paris" `
         --hostname="$Hostname.lyux.lan" `
-        --extra-install-kernel-parameters="auto=true priority=critical debian-installer/locale=fr_FR.UTF-8 keyboard-configuration/xkb-keymap=fr(latin9) languagechooser/language-name=French countrychooser/shortlist=FR tasksel:tasksel/first=multiselect standard, kde-desktop" `
+        --extra-install-kernel-parameters="auto=true priority=critical preseed/url=http://10.0.2.2:8000/preseed.cfg url=http://10.0.2.2:8000/preseed.cfg debian-installer/locale=fr_FR.UTF-8 keyboard-configuration/xkb-keymap=fr(latin9) languagechooser/language-name=French countrychooser/shortlist=FR tasksel:tasksel/first=multiselect standard, kde-desktop" `
         --install-additions
 
     Write-Host "  [+] $VmName configuree avec succes !" -ForegroundColor Green

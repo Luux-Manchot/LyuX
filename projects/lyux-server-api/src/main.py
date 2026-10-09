@@ -208,27 +208,41 @@ def create_ticket(req: TicketCreationRequest):
 @app.get("/preseed.cfg", response_class=PlainTextResponse)
 def get_preseed():
     return """
-# Preseed Debian 12 KDE Plasma Francais
+# Preseed Debian 12 KDE Plasma Francais (Zero Question)
 d-i debian-installer/language string fr
 d-i debian-installer/country string FR
 d-i debian-installer/locale string fr_FR.UTF-8
+d-i localechooser/supported-locales multiselect fr_FR.UTF-8
 d-i console-setup/ask_detect boolean false
 d-i keyboard-configuration/xkb-keymap select fr(latin9)
 d-i keyboard-configuration/layoutcode string fr
+d-i keyboard-configuration/modelcode string pc105
 d-i netcfg/choose_interface select auto
 d-i netcfg/get_domain string lyux.lan
+d-i mirror/country string manual
+d-i mirror/http/hostname string deb.debian.org
+d-i mirror/http/directory string /debian
+d-i mirror/http/proxy string
 d-i partman-auto/method string regular
 d-i partman-auto/choose_recipe select atomic
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
 d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
 d-i passwd/root-login boolean false
 d-i passwd/user-fullname string Administrateur LyuX
 d-i passwd/username string lyux-admin
-d-i passwd/user-password password LyuxDeploy2026!
-d-i passwd/user-password-again password LyuxDeploy2026!
+d-i passwd/user-password password LyuxAdmin2026!
+d-i passwd/user-password-again password LyuxAdmin2026!
+d-i user-setup/allow-password-weak boolean true
+d-i user-setup/encrypt-home boolean false
 tasksel tasksel/first multiselect kde-desktop, standard
 d-i pkgsel/include string kde-plasma-desktop sddm cifs-utils libpam-mount sssd firefox-esr libreoffice python3-pyqt6 sudo curl git
+d-i pkgsel/upgrade select none
+popularity-contest popularity-contest/participate boolean false
 d-i grub-installer/only_debian boolean true
+d-i grub-installer/bootdev string default
+d-i preseed/late_command string in-target usermod -aG sudo lyux-admin; in-target useradd -m -s /bin/bash invite; in-target passwd -d invite; in-target localectl set-keymap fr-latin9; in-target localectl set-x11-keymap fr pc105 latin9; in-target systemctl set-default graphical.target
 d-i finish-install/reboot_in_progress note
 """.strip()
 

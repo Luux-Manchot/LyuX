@@ -34,14 +34,15 @@ from PyQt6.QtCore import Qt, QTimer, QSize, QThread, pyqtSignal
 from PyQt6.QtGui import QFont, QIcon, QColor, QPixmap
 
 ACCOUNTS = {
+    "lyux-admin": {"name": "Administrateur Système", "role": "admin", "classe": "IT / Maintenance", "pwd": "LyuxAdmin2026!", "room": "ALL"},
+    "invite": {"name": "Session Invité", "role": "invite", "classe": "Sans compte (Éphémère)", "pwd": "", "room": "LOCAL"},
+    "thomas.durand": {"name": "M. Durand (Maths / NSI)", "role": "enseignant", "classe": "Profs Maths", "pwd": "Prof2026!", "room": "B204"},
+    "sophie.leroy": {"name": "Mme. Leroy (Sciences)", "role": "enseignant", "classe": "Profs Sciences", "pwd": "Prof2026!", "room": "S102"},
     "lucas.martin": {"name": "Lucas Martin", "role": "eleve", "classe": "1G1 (Salle B204)", "pwd": "Eleve2026!", "room": "B204"},
     "emma.bernard": {"name": "Emma Bernard", "role": "eleve", "classe": "1G1 (Salle B204)", "pwd": "Eleve2026!", "room": "B204"},
     "hugo.dubois": {"name": "Hugo Dubois", "role": "eleve", "classe": "1G2 (Salle S102)", "pwd": "Eleve2026!", "room": "S102"},
     "lea.thomas": {"name": "Léa Thomas", "role": "eleve", "classe": "1G2 (Salle S102)", "pwd": "Eleve2026!", "room": "S102"},
-    "thomas.durand": {"name": "M. Durand (Maths / NSI)", "role": "enseignant", "classe": "Profs Maths", "pwd": "Prof2026!", "room": "B204"},
-    "sophie.leroy": {"name": "Mme. Leroy (Sciences)", "role": "enseignant", "classe": "Profs Sciences", "pwd": "Prof2026!", "room": "S102"},
     "claire.viesco": {"name": "Claire Vie-Scolaire", "role": "viesco", "classe": "Vie Scolaire", "pwd": "Viesco2026!", "room": "VIESCO"},
-    "alain.direction": {"name": "Alain Direction", "role": "administration", "classe": "Direction", "pwd": "Admin2026!", "room": "ADMIN"},
 }
 
 class AutoInstallThread(QThread):
@@ -640,9 +641,17 @@ class LyuxUnifiedApp(QMainWindow):
         add_icon("📚", "Partages Classes", f"Cours et devoirs //classes/{self.current_room}", self.open_class_shares)
         add_icon("🆘", "Signaler Panne", "Ticket GLPI avec capture", self.open_report_tool)
 
-        if u["role"] == "enseignant":
+        if u["role"] == "admin":
+            add_icon("🎛️", "Cockpit Admin", "Console système :9090", lambda: os.system("start http://localhost:9090"), is_primary=True)
+            add_icon("👥", "LAM Annuaire", "Comptes élèves/profs :8082", lambda: os.system("start http://localhost:8082"), is_primary=True)
+            add_icon("🎫", "GLPI Tickets", "Helpdesk :8085", lambda: os.system("start http://localhost:8085"), is_primary=True)
+            add_icon("📈", "Uptime Kuma", "Supervision :3001", lambda: os.system("start http://localhost:3001"), is_primary=True)
+        elif u["role"] == "enseignant":
             add_icon("🖥️", "Veyon Master", "Supervision des élèves en direct", self.open_veyon_master, is_primary=True)
             add_icon("🔑", "Réinit MDP Élève", "Déblocage express d'un élève", self.open_pwd_reset, is_primary=True)
+        elif u["role"] == "invite":
+            add_icon("⏱️", "Session Éphémère", "Nettoyage automatique au logout", lambda: QMessageBox.information(self, "Session Invité", "Session libre hors-ligne : les fichiers temporaires seront supprimés à la déconnexion."))
+            add_icon("🚀", "Logiciels Préinstallés", "Thonny, Python, LibreOffice, GIMP", self.open_apps_info)
         else:
             add_icon("🚀", "Logiciels Préinstallés", "Thonny, Python, LibreOffice, GIMP", self.open_apps_info)
 

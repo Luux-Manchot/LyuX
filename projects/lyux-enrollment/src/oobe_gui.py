@@ -593,14 +593,15 @@ class LyuxOOBEWindow(QMainWindow):
         card_layout.addWidget(QLabel("Sélectionner un compte du serveur :"))
         self.user_selector = QComboBox()
         self.accounts_map = {
-            "lucas.martin": {"name": "Lucas Martin", "role": "Élève (1G1)", "pwd": "Eleve2026!", "room": "B204"},
-            "emma.bernard": {"name": "Emma Bernard", "role": "Élève (1G1)", "pwd": "Eleve2026!", "room": "B204"},
-            "hugo.dubois": {"name": "Hugo Dubois", "role": "Élève (1G2)", "pwd": "Eleve2026!", "room": "S102"},
-            "lea.thomas": {"name": "Léa Thomas", "role": "Élève (1G2)", "pwd": "Eleve2026!", "room": "S102"},
-            "thomas.durand": {"name": "M. Durand (Maths / NSI)", "role": "Enseignant", "pwd": "Prof2026!", "room": "B204"},
-            "sophie.leroy": {"name": "Mme. Leroy (Sciences)", "role": "Enseignant", "pwd": "Prof2026!", "room": "S102"},
+            "lyux-admin": {"name": "Administrateur Système", "role": "Admin Local (Secours / Maintenance)", "pwd": "LyuxAdmin2026!", "room": "ALL", "is_admin": True},
+            "invite": {"name": "Session Invité", "role": "Sans compte (Session Éphémère)", "pwd": "", "room": "LOCAL", "is_guest": True},
+            "thomas.durand": {"name": "M. Durand (Maths / NSI)", "role": "Enseignant (Veyon Master)", "pwd": "Prof2026!", "room": "B204", "is_teacher": True},
+            "sophie.leroy": {"name": "Mme. Leroy (Sciences)", "role": "Enseignante (Veyon Master)", "pwd": "Prof2026!", "room": "S102", "is_teacher": True},
+            "lucas.martin": {"name": "Lucas Martin", "role": "Élève (1G1 NSI)", "pwd": "Eleve2026!", "room": "B204"},
+            "emma.bernard": {"name": "Emma Bernard", "role": "Élève (1G1 NSI)", "pwd": "Eleve2026!", "room": "B204"},
+            "hugo.dubois": {"name": "Hugo Dubois", "role": "Élève (1G2 Sciences)", "pwd": "Eleve2026!", "room": "S102"},
+            "lea.thomas": {"name": "Léa Thomas", "role": "Élève (1G2 Sciences)", "pwd": "Eleve2026!", "room": "S102"},
             "claire.viesco": {"name": "Claire Vie-Scolaire", "role": "Vie Scolaire", "pwd": "Viesco2026!", "room": "VIESCO"},
-            "alain.direction": {"name": "Alain Direction", "role": "Direction", "pwd": "Admin2026!", "room": "ADMIN"},
         }
         for u, d in self.accounts_map.items():
             self.user_selector.addItem(f"{d['name']} — {d['role']}", u)
@@ -735,10 +736,33 @@ class LyuxOOBEWindow(QMainWindow):
             l.addWidget(b)
             self.desktop_grid.addWidget(f, row, col)
 
-        add_card("📁", "Espace Personnel", f"Montage transparent //serveur/homes/{u['username']}", 0, 0)
-        add_card("📚", "Partage de Classe", f"Dépôts et cours //serveur/classes/{self.selected_room}", 1, 0)
-        add_card("🆘", "Signaler Incident", "Création de ticket GLPI", 2, 0)
-        add_card("🚀", "Logiciels Préinstallés", "Python, VS Code, LibreOffice, GIMP", 3, 0)
+        if u.get("is_admin"):
+            add_card("🎛️", "Cockpit Admin (Système)", "Accès console http://localhost:9090", 0, 0)
+            add_card("👥", "LDAP Account Manager (LAM)", "Gestion comptes http://localhost:8082", 1, 0)
+            add_card("🎫", "GLPI Helpdesk & Parc", "Tickets & matériel http://localhost:8085", 2, 0)
+            add_card("📈", "Uptime Kuma (Monitoring)", "Supervision http://localhost:3001", 3, 0)
+            add_card("💻", "Terminal Root (Sudo)", "Maintenance système locale", 0, 1)
+            add_card("⚙️", "Configuration Réseau & Salles", "Profils Ansible et liaisons", 1, 1)
+        elif u.get("is_teacher"):
+            add_card("👁️", f"Veyon Master ({self.selected_room})", f"Supervision en direct de la salle {self.selected_room}", 0, 0)
+            add_card("📤", "Distribution de Cours (Écriture)", f"//serveur/classes/{self.selected_room}/Distribution", 1, 0)
+            add_card("📥", "Dépôts des Devoirs Élèves", f"//serveur/classes/{self.selected_room}/Depot_Devoirs", 2, 0)
+            add_card("📁", "Espace Personnel (20 Go)", f"//serveur/homes/{u['username']}", 3, 0)
+            add_card("🆘", "Signaler Incident GLPI", "Création de ticket prioritaire", 0, 1)
+            add_card("🚀", "Logiciels Matière", "Thonny, VS Code, Avogadro, Tracker", 1, 1)
+        elif u.get("is_guest"):
+            add_card("⏱️", "Session Éphémère", "Fichiers temporaires supprimés au logout", 0, 0)
+            add_card("📝", "LibreOffice Writer", "Traitement de texte local", 1, 0)
+            add_card("📊", "LibreOffice Calc", "Tableur local", 2, 0)
+            add_card("🐍", "Python 3 & Thonny IDE", "Programmation locale", 3, 0)
+        else:
+            # Élève
+            add_card("📁", "Espace Personnel (5 Go)", f"Montage transparent //serveur/homes/{u['username']}", 0, 0)
+            add_card("📚", "Partage de Classe (Lecture)", f"//serveur/classes/{self.selected_room}/Distribution", 1, 0)
+            add_card("📬", "Rendre un Devoir (Dépôt)", f"Boîte aux lettres //serveur/classes/{self.selected_room}/Depot_Devoirs", 2, 0)
+            add_card("🆘", "Signaler Incident GLPI", "Création de ticket matériel", 3, 0)
+            add_card("🚀", "Logiciels Préinstallés", "Python, VS Code, LibreOffice, GIMP", 0, 1)
+            add_card("🌐", "Navigateur Sécurisé", "Firefox ESR avec filtres scolaires", 1, 1)
 
 def main():
     app = QApplication(sys.argv)
