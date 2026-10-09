@@ -1,0 +1,32 @@
+# ISO, VM Disks & Virtualization Artifacts
+*.iso
+*.vdi
+*.vmdk
+*.box
+*.img
+*.raw
+.vagrant/
+VirtualBox VMs/
+
+# Python & Testing
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Environments & Secrets
+.env
+.venv
+env/
+venv/
+
+# Agents & Workflows
+.agents/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+Desktop.ini
