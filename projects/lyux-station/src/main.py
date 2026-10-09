@@ -217,6 +217,9 @@ class LyuxUnifiedApp(QMainWindow):
         self.stacked.addWidget(self.page_login)   # 3
         self.stacked.addWidget(self.page_desktop) # 4
 
+        # DÉMARRAGE DIRECT SUR LA SESSION (SDDM) SANS AUCUNE QUESTION
+        self.stacked.setCurrentIndex(3)
+
     # =========================================================================
     # 1. OOBE ÉTAPE 1 : LANGUE & CLAVIER (OPTIONS PAR DÉFAUT MODIFIABLES)
     # =========================================================================
@@ -365,18 +368,33 @@ class LyuxUnifiedApp(QMainWindow):
 
     def ping_server(self):
         url = self.url_input.text().strip()
+        if not url:
+            url = "http://localhost:8000"
+        if not url.startswith("http://") and not url.startswith("https://"):
+            url = f"http://{url}"
+        self.url_input.setText(url)
         try:
-            r = requests.get(f"{url}/health", timeout=1.5)
+            r = requests.get(f"{url}/health", timeout=2.0)
             if r.status_code == 200:
-                self.server_status_lbl.setText(f"🟢 Connecté à {url} (API OK)")
+                self.server_status_lbl.setText(f"🟢 Connecté à {url} (API LyuX OK)")
                 self.server_status_lbl.setStyleSheet("color: #34D399; font-size: 11px; font-weight: bold;")
                 self.api_url = url
-            else:
-                self.server_status_lbl.setText("🟡 Serveur joignable avec avertissement")
-                self.server_status_lbl.setStyleSheet("color: #FCD34D; font-size: 11px;")
+                return
         except Exception:
-            self.server_status_lbl.setText("🟡 Serveur non joignable (mode local actif)")
-            self.server_status_lbl.setStyleSheet("color: #FCD34D; font-size: 11px;")
+            pass
+
+        try:
+            r = requests.get(url, timeout=2.0)
+            if r.status_code in (200, 301, 302, 404):
+                self.server_status_lbl.setText(f"🟢 Hôte joignable : {url}")
+                self.server_status_lbl.setStyleSheet("color: #34D399; font-size: 11px; font-weight: bold;")
+                self.api_url = url
+                return
+        except Exception:
+            pass
+
+        self.server_status_lbl.setText("🟡 Serveur non joint — Mode Autonome / Cache Local actif")
+        self.server_status_lbl.setStyleSheet("color: #FCD34D; font-size: 11px;")
 
     # =========================================================================
     # 3. OOBE ÉTAPE 3 : INSTALLATION DES DÉPENDANCES & CONFIGURATION
@@ -459,23 +477,53 @@ class LyuxUnifiedApp(QMainWindow):
 
         card = QFrame()
         card.setObjectName("SetupCard")
-        card.setFixedSize(500, 540)
+        card.setFixedSize(540, 600)
         card_layout = QVBoxLayout(card)
-        card_layout.setContentsMargins(40, 30, 40, 30)
-        card_layout.setSpacing(14)
+        card_layout.setContentsMargins(40, 25, 40, 25)
+        card_layout.setSpacing(12)
 
-        # Header Badge Machine
-        self.login_badge = QLabel(f"💻 Poste : {self.assigned_hostname} • Salle {self.current_room}")
+        # Header Badge Machine - 100% universel
+        self.login_badge = QLabel(f"💻 Poste Universel : {self.assigned_hostname} • Salle {self.current_room}")
         self.login_badge.setStyleSheet("font-size: 12px; color: #38BDF8; font-weight: bold; background: #0F172A; padding: 6px 12px; border-radius: 6px;")
         self.login_badge.setAlignment(Qt.AlignmentFlag.AlignCenter)
         card_layout.addWidget(self.login_badge)
 
-        logo = QLabel("🐧 LyuX")
-        logo.setStyleSheet("font-size: 32px; font-weight: bold; color: #FFFFFF;")
+        logo = QLabel("🐧 LyuX OS")
+        logo.setStyleSheet("font-size: 28px; font-weight: bold; color: #FFFFFF;")
         logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
         card_layout.addWidget(logo)
 
-        card_layout.addWidget(QLabel("Sélectionner un compte du serveur :"))
+        # Raccourcis 1-clic pour tests immédiats
+        quick_lbl = QLabel("⚡ Connexion Immédiate pour Test (1 Clic) :")
+        quick_lbl.setStyleSheet("color: #94A3B8; font-size: 11px; font-weight: bold; margin-top: 4px;")
+        card_layout.addWidget(quick_lbl)
+
+        quick_box = QHBoxLayout()
+        quick_box.setSpacing(8)
+
+        btn_admin = QPushButton("🛡️ Admin")
+        btn_admin.setStyleSheet("background-color: #0284C7; color: white; font-size: 11px; padding: 6px 8px; font-weight: bold;")
+        btn_admin.clicked.connect(lambda: self.quick_login("lyux-admin"))
+
+        btn_invite = QPushButton("👤 Invité")
+        btn_invite.setStyleSheet("background-color: #475569; color: white; font-size: 11px; padding: 6px 8px; font-weight: bold;")
+        btn_invite.clicked.connect(lambda: self.quick_login("invite"))
+
+        btn_prof = QPushButton("👨‍🏫 Professeur")
+        btn_prof.setStyleSheet("background-color: #0D9488; color: white; font-size: 11px; padding: 6px 8px; font-weight: bold;")
+        btn_prof.clicked.connect(lambda: self.quick_login("thomas.durand"))
+
+        btn_eleve = QPushButton("🎓 Élève")
+        btn_eleve.setStyleSheet("background-color: #4338CA; color: white; font-size: 11px; padding: 6px 8px; font-weight: bold;")
+        btn_eleve.clicked.connect(lambda: self.quick_login("lucas.martin"))
+
+        quick_box.addWidget(btn_admin)
+        quick_box.addWidget(btn_invite)
+        quick_box.addWidget(btn_prof)
+        quick_box.addWidget(btn_eleve)
+        card_layout.addLayout(quick_box)
+
+        card_layout.addWidget(QLabel("Ou sélectionner un compte dans l'annuaire :"))
         self.user_combo = QComboBox()
         for login, data in ACCOUNTS.items():
             self.user_combo.addItem(f"{data['name']} ({data['role'].upper()} - {data['classe']})", login)
@@ -485,28 +533,36 @@ class LyuxUnifiedApp(QMainWindow):
         card_layout.addWidget(QLabel("Identifiant :"))
         self.login_input = QLineEdit()
         self.login_input.setPlaceholderText("prenom.nom")
+        self.login_input.returnPressed.connect(self.perform_login)
         card_layout.addWidget(self.login_input)
 
         card_layout.addWidget(QLabel("Mot de passe :"))
         self.pwd_input = QLineEdit()
         self.pwd_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.pwd_input.setPlaceholderText("••••••••")
+        self.pwd_input.returnPressed.connect(self.perform_login)
         card_layout.addWidget(self.pwd_input)
 
-        self.login_btn = QPushButton("Ouvrir la session KDE Plasma")
+        self.login_btn = QPushButton("Ouvrir la session KDE Plasma (Entrée)")
         self.login_btn.setObjectName("PrimaryBtn")
-        self.login_btn.setFixedHeight(42)
+        self.login_btn.setFixedHeight(40)
         self.login_btn.clicked.connect(self.perform_login)
         card_layout.addWidget(self.login_btn)
 
-        oobe_btn = QPushButton("⚙️ Assistant de Configuration / Nouveau PC (OOBE)")
-        oobe_btn.setStyleSheet("font-size: 11px; background: transparent; border: none; color: #38BDF8; text-decoration: underline;")
+        oobe_btn = QPushButton("⚙️ Assistant OOBE (Enrôlement d'une nouvelle machine)")
+        oobe_btn.setStyleSheet("font-size: 11px; background: transparent; border: none; color: #38BDF8; text-decoration: underline; margin-top: 4px;")
         oobe_btn.clicked.connect(lambda: self.stacked.setCurrentIndex(0))
         card_layout.addWidget(oobe_btn)
 
         layout.addWidget(card)
         self.on_user_selected(0)
         return page
+
+    def quick_login(self, login):
+        if login in ACCOUNTS:
+            self.login_input.setText(login)
+            self.pwd_input.setText(ACCOUNTS[login]["pwd"])
+            self.perform_login()
 
     def on_user_selected(self, index):
         login = self.user_combo.currentData()
@@ -518,7 +574,7 @@ class LyuxUnifiedApp(QMainWindow):
         login = self.login_input.text().strip()
         pwd = self.pwd_input.text()
 
-        if login in ACCOUNTS and (pwd == ACCOUNTS[login]["pwd"] or pwd == "1234"):
+        if login in ACCOUNTS and (pwd == ACCOUNTS[login]["pwd"] or pwd == "1234" or login == "invite"):
             self.current_user = ACCOUNTS[login]
             self.current_user["login"] = login
             self.update_desktop_view()
