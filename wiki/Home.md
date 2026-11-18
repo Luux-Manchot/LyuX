@@ -87,3 +87,18 @@ graph TB
 | **#9** | Supervision | Activation dynamique de Veyon Master au login prof | **Validé** | [Supervision Veyon Master](Supervision-Veyon-Master) |
 | **#10**| UX / Session | Assistant Premier Démarrage (LyuX Welcome) | **Validé** | [Assistant Premier Démarrage (Welcome)](Assistant-Premier-Demarrage-Welcome) |
 | **#11**| Infra Serveur | Socle serveur agnostique (Proxmox, Bare-Metal, VM) | **Résolu** | [Architecture Serveur Unique](Architecture-Serveur-Unique) |
+
+---
+
+## 🤖 Ingénierie Système & Documentation IA
+
+<div align="center">
+
+Cette documentation technique, les modélisations d'architecture et les matrices de validation ont été formalisées et enrichies avec l'assistance de l'IA **Antigravity** (Google DeepMind).
+
+Projet conçu et développé par **FlowCreativeStudio** · Florian ([@NayrolfRdgs](https://github.com/NayrolfRdgs))  
+Contact officiel : `contact@flowcrea.fr`  
+*Opération Manchot — Système d'exploitation & infrastructure libre pour lycées et collèges.*
+
+</div>
+
