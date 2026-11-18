@@ -26,6 +26,7 @@
 ### 🚀 4. Déploiement & Tests
 * **[Déploiement Clé USB & OOBE](Deploiement-Cle-USB-OOBE)**
 * **[Lab Virtuel & Automatisation SSH](Lab-Virtuel-et-Automatisation-SSH)**
+* **[Stratégie Dev & Socles Open Source](Bases-Open-Source-et-Strategie-de-Dev)**
 
 ---
 

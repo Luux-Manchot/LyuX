@@ -70,6 +70,7 @@ graph TB
 | **08. Déploiement** | **[Déploiement Clé USB & OOBE](Deploiement-Cle-USB-OOBE)** | Installation graphique style Windows Setup en 3 clics sans écran bleu textuel. *(Issue #1, Issue #4)* |
 | **09. Tests & Validation** | **[Lab Virtuel & Automatisation SSH](Lab-Virtuel-et-Automatisation-SSH)** | Environnement de test en petites VMs pilotées à 100% en SSH, 264 tests E2E. *(Issue #8)* |
 | **10. Compatibilité Windows** | **[Logiciels Windows (Wine/Proton)](Compatibilite-Logiciels-Windows-Wine-Proton)** | Exécution transparente des logiciels historiques de SVT / Physique / Maths via Wine & Proton. |
+| **11. Stratégie de Dev** | **[Socles Open Source & Dev](Bases-Open-Source-et-Strategie-de-Dev)** | Réutilisation et personnalisation des socles majeurs (Calamares, plasma-welcome, SambaEdu, Bottles). |
 
 ---
 
