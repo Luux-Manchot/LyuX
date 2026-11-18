@@ -69,6 +69,7 @@ graph TB
 | **07. Expérience Utilisateur** | **[Assistant Premier Démarrage (Welcome)](Assistant-Premier-Demarrage-Welcome)** | Guide sobre au 1er login pour présenter les partages et la charte. *(Issue #10)* |
 | **08. Déploiement** | **[Déploiement Clé USB & OOBE](Deploiement-Cle-USB-OOBE)** | Installation graphique style Windows Setup en 3 clics sans écran bleu textuel. *(Issue #1, Issue #4)* |
 | **09. Tests & Validation** | **[Lab Virtuel & Automatisation SSH](Lab-Virtuel-et-Automatisation-SSH)** | Environnement de test en petites VMs pilotées à 100% en SSH, 264 tests E2E. *(Issue #8)* |
+| **10. Compatibilité Windows** | **[Logiciels Windows (Wine/Proton)](Compatibilite-Logiciels-Windows-Wine-Proton)** | Exécution transparente des logiciels historiques de SVT / Physique / Maths via Wine & Proton. |
 
 ---
 

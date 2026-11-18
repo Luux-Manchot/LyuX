@@ -13,6 +13,7 @@
 * **[Supervision Veyon Master](Supervision-Veyon-Master)**
 * **[Mode Examen Sécurisé](Mode-Examen-Securise)**
 * **[Catalogue Flatpak & Droits](Catalogue-Logiciels-Flatpak)**
+* **[Logiciels Windows (Wine/Proton)](Compatibilite-Logiciels-Windows-Wine-Proton)**
 
 ---
 
