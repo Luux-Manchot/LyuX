@@ -99,6 +99,12 @@ class TestLyuXClientModules:
         assert "ram_usage" in diag
         assert "ip_address" in diag
 
+    def test_cli_import(self):
+        cli = load_module("lyux_cli", BASE_DIR / "projects" / "lyux-cli" / "lyux.py")
+        assert hasattr(cli, "main")
+        assert hasattr(cli, "cmd_status")
+
+
     def test_hardware_fingerprint(self):
         hw = hardware.get_hardware_fingerprint()
         assert "mac_address" in hw

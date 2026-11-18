@@ -695,6 +695,7 @@ class LyuxUnifiedApp(QMainWindow):
 
         add_icon("📂", "Espace Personnel", f"Fichiers //homes/{u['login']}", self.open_personal_files)
         add_icon("📚", "Partages Classes", f"Cours et devoirs //classes/{self.current_room}", self.open_class_shares)
+        add_icon("👋", "Bienvenue LyuX", "Guide de 1er démarrage", self.open_welcome_tool)
         add_icon("🆘", "Signaler Panne", "Ticket GLPI avec capture", self.open_report_tool)
 
         if u["role"] == "admin":
@@ -741,6 +742,9 @@ class LyuxUnifiedApp(QMainWindow):
             "• 🎨 GIMP & Inkscape\n"
             "• 🔬 Avogadro & Tracker 3D"
         )
+
+    def open_welcome_tool(self):
+        os.system("python projects/lyux-welcome/src/main.py &")
 
     def open_report_tool(self):
         os.system("python projects/lyux-report/src/main.py &")
