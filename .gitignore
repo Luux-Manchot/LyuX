@@ -7,6 +7,8 @@
 *.raw
 .vagrant/
 VirtualBox VMs/
+VM/
+
 
 # Python & Testing
 __pycache__/
