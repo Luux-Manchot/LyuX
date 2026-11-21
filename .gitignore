@@ -27,6 +27,7 @@ venv/
 
 # Agents & Workflows
 .agents/
+.antigravity/
 
 # OS Specific
 .DS_Store
