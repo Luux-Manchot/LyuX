@@ -89,6 +89,25 @@ graph TB
 | **#9** | Supervision | Activation dynamique de Veyon Master au login prof | **Validé** | [Supervision Veyon Master](Supervision-Veyon-Master) |
 | **#10**| UX / Session | Assistant Premier Démarrage (LyuX Welcome) | **Validé** | [Assistant Premier Démarrage (Welcome)](Assistant-Premier-Demarrage-Welcome) |
 | **#11**| Infra Serveur | Socle serveur agnostique (Proxmox, Bare-Metal, VM) | **Résolu** | [Architecture Serveur Unique](Architecture-Serveur-Unique) |
+| **#12**| Stratégie Dev | Réutilisation de socles open source éprouvés | **Résolu** | [Socles Open Source & Dev](Bases-Open-Source-et-Strategie-de-Dev) |
+| **#13**| OOBE / Boot | Client Léger Universel piloté par le Serveur | **Spécifié** | [Déploiement Clé USB & OOBE](Deploiement-Cle-USB-OOBE) |
+| **#14**| Stockage | Système de Cache Profils Hybride LRU | **Spécifié** | [Feuille de Route](Roadmap) |
+| **#15**| UX / Sécurité | Ergonomie Dolphin & Masquage Disque sda1 | **Spécifié** | [Postes Universels & Itinérance](Postes-Universels-et-Itinerance) |
+
+---
+
+## 🏛️ Les Dépôts Officiels de l'Organisation GitHub Luux-Manchot
+
+L'écosystème LyuX est découpé en dépôts spécialisés sous l'organisation officielle [`github.com/Luux-Manchot`](https://github.com/Luux-Manchot) :
+
+| Dépôt GitHub | Rôle & Composants | Cible de Déploiement |
+| :--- | :--- | :--- |
+| **[`Luux-Manchot/LyuX`](https://github.com/Luux-Manchot/LyuX)** | Dépôt principal, documentation globale, wiki, suivi de la roadmap | Organisation & Architecture |
+| **[`Luux-Manchot/lyux-server`](https://github.com/Luux-Manchot/lyux-server)** | API centrale FastAPI, pile Docker (Samba-AD, GLPI, Traefik, Cockpit) | Serveur Dédié / Proxmox |
+| **[`Luux-Manchot/lyux-desktop`](https://github.com/Luux-Manchot/lyux-desktop)** | Environnement KDE Plasma, SDDM épuré, OOBE, Veyon, Agent de synchro | Postes de Salle & Clients |
+| **[`Luux-Manchot/lyux-os-builder`](https://github.com/Luux-Manchot/lyux-os-builder)** | Outil de création d'ISO bootable universelle, SquashFS, Calamares | Clés USB d'installation |
+| **[`Luux-Manchot/lyux-import-siecle`](https://github.com/Luux-Manchot/lyux-import-siecle)** | Outil CLI autonome d'importation des exports SIÈCLE & Pronote CSV | Outil d'administration |
+
 
 ---
 
