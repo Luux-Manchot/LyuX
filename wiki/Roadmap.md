@@ -84,3 +84,6 @@ flowchart TD
 
 4. **Distribution Automatisée Flatpak par Salle (Issue #7)** :
    - Dès qu'un poste est enrôlé en salle B204 (Informatique), l'agent active Thonny, Python et VSCode. S'il est en S102 (Sciences), il active Avogadro et Tracker.
+
+5. **Système de Cache Profils Hybride & Démon LRU (Issue #14)** :
+   - Mise en cache intelligente des profils sur le SSD des postes basée sur les habitudes d'emploi du temps, avec démon d'éviction automatique (`lyux-cache-cleaner` : purge après 14 jours d'inactivité ou saturation à < 20 % d'espace disque).
