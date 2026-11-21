@@ -20,6 +20,7 @@ DEFAULT_DB_LOCATIONS = [
     os.environ.get("KUMA_DB_PATH"),
     "/app/data/kuma.db",  # Inside Uptime Kuma container
     "data/uptime-kuma/kuma.db",  # Relative to lyux-server-infra
+    "server/lyux-server-infra/data/uptime-kuma/kuma.db",
     "projects/lyux-server-infra/data/uptime-kuma/kuma.db",
 ]
 

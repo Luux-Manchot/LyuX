@@ -16,10 +16,17 @@ def load_module(name, path):
     spec.loader.exec_module(module)
     return module
 
-api_main = load_module("server_api_main", BASE_DIR / "projects" / "lyux-server-api" / "src" / "main.py")
-role_detector = load_module("role_detector", BASE_DIR / "projects" / "lyux-welcome" / "src" / "role_detector.py")
-system_info = load_module("system_info", BASE_DIR / "projects" / "lyux-report" / "src" / "system_info.py")
-hardware = load_module("hardware", BASE_DIR / "projects" / "lyux-enrollment" / "src" / "hardware.py")
+def _resolve(rel: str) -> Path:
+    p = BASE_DIR / rel
+    if p.exists():
+        return p
+    p_leg = BASE_DIR / "projects" / rel.split("/", 1)[-1]
+    return p if p.exists() else p_leg
+
+api_main = load_module("server_api_main", _resolve("server/lyux-server-api/src/main.py"))
+role_detector = load_module("role_detector", _resolve("applications/lyux-welcome/src/role_detector.py"))
+system_info = load_module("system_info", _resolve("applications/lyux-report/src/system_info.py"))
+hardware = load_module("hardware", _resolve("applications/lyux-enrollment/src/hardware.py"))
 
 client = TestClient(api_main.app)
 
@@ -100,7 +107,7 @@ class TestLyuXClientModules:
         assert "ip_address" in diag
 
     def test_cli_import(self):
-        cli = load_module("lyux_cli", BASE_DIR / "projects" / "lyux-cli" / "lyux.py")
+        cli = load_module("lyux_cli", _resolve("applications/lyux-cli/lyux.py"))
         assert hasattr(cli, "main")
         assert hasattr(cli, "cmd_status")
 

@@ -9,15 +9,22 @@ import yaml
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Chemins absolus vers les modules projets
-SERVER_INFRA_DIR = ROOT_DIR / "projects" / "lyux-server-infra"
-ANSIBLE_DIR = ROOT_DIR / "projects" / "lyux-ansible"
-ENROLLMENT_DIR = ROOT_DIR / "projects" / "lyux-enrollment"
-LAB_VM_DIR = ROOT_DIR / "projects" / "lyux-lab-vm"
-ISO_BUILDER_DIR = ROOT_DIR / "projects" / "lyux-iso-builder"
-STATION_DIR = ROOT_DIR / "projects" / "lyux-station"
-WELCOME_DIR = ROOT_DIR / "projects" / "lyux-welcome"
-REPORT_DIR = ROOT_DIR / "projects" / "lyux-report"
-SERVER_API_DIR = ROOT_DIR / "projects" / "lyux-server-api"
+def _dir(rel: str) -> Path:
+    p = ROOT_DIR / rel
+    if p.exists():
+        return p
+    p_leg = ROOT_DIR / "projects" / rel.split("/", 1)[-1]
+    return p if p.exists() else p_leg
+
+SERVER_INFRA_DIR = _dir("server/lyux-server-infra")
+ANSIBLE_DIR = _dir("os-builder/lyux-ansible")
+ENROLLMENT_DIR = _dir("applications/lyux-enrollment")
+LAB_VM_DIR = _dir("os-builder/lyux-lab-vm")
+ISO_BUILDER_DIR = _dir("os-builder/lyux-iso-builder")
+STATION_DIR = _dir("applications/lyux-station")
+WELCOME_DIR = _dir("applications/lyux-welcome")
+REPORT_DIR = _dir("applications/lyux-report")
+SERVER_API_DIR = _dir("server/lyux-server-api")
 
 # Contrats normatifs officiels de PROJECT.md et ORIGINAL_REQUEST.md
 EXPECTED_PORTS = {

@@ -31,7 +31,7 @@ from cryptography.exceptions import InvalidSignature
 
 # Add lyux-station/src to path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-STATION_SRC = PROJECT_ROOT / "projects" / "lyux-station" / "src"
+STATION_SRC = PROJECT_ROOT / "applications" / "lyux-station" / "src"
 if str(STATION_SRC) not in sys.path:
     sys.path.insert(0, str(STATION_SRC))
 
@@ -46,8 +46,8 @@ class TestCryptographicRSAVeyonKeys:
 
     @pytest.fixture
     def key_paths(self):
-        priv_path = PROJECT_ROOT / "projects" / "lyux-ansible" / "configs" / "veyon" / "keys" / "private" / "teacher" / "key"
-        pub_path = PROJECT_ROOT / "projects" / "lyux-ansible" / "configs" / "veyon" / "keys" / "public" / "teacher" / "key"
+        priv_path = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "configs" / "veyon" / "keys" / "private" / "teacher" / "key"
+        pub_path = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "configs" / "veyon" / "keys" / "public" / "teacher" / "key"
         return priv_path, pub_path
 
     def test_rsa_key_parameters_and_entropy(self, key_paths):
@@ -122,9 +122,9 @@ class TestCryptographicRSAVeyonKeys:
         """Verify that deployed copies in roles match the canonical keys byte-for-byte."""
         canonical_priv, canonical_pub = key_paths
 
-        prof_priv = PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-prof" / "files" / "keys" / "private" / "teacher" / "key"
-        prof_pub = PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-prof" / "files" / "keys" / "public" / "teacher" / "key"
-        eleve_pub = PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-eleve" / "files" / "keys" / "public" / "teacher" / "key"
+        prof_priv = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-prof" / "files" / "keys" / "private" / "teacher" / "key"
+        prof_pub = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-prof" / "files" / "keys" / "public" / "teacher" / "key"
+        eleve_pub = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-eleve" / "files" / "keys" / "public" / "teacher" / "key"
 
         assert prof_priv.read_bytes() == canonical_priv.read_bytes()
         assert prof_pub.read_bytes() == canonical_pub.read_bytes()
@@ -180,7 +180,7 @@ class TestKeySecurityBoundaries:
 
     def test_strict_zero_private_key_leakage_in_student_role(self):
         """Recursively scan every file in lyux-profile-eleve to ensure zero private key leak."""
-        eleve_dir = PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-eleve"
+        eleve_dir = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-eleve"
         for root, dirs, files in os.walk(eleve_dir):
             assert "private" not in dirs, f"Private directory found in student role: {root}"
             for file_name in files:
@@ -191,13 +191,13 @@ class TestKeySecurityBoundaries:
 
     def test_student_tasks_explicitly_remove_private_directory(self):
         """Verify student tasks enforce state: absent on /etc/veyon/keys/private."""
-        eleve_tasks = (PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-eleve" / "tasks" / "main.yml").read_text(encoding="utf-8")
+        eleve_tasks = (PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-eleve" / "tasks" / "main.yml").read_text(encoding="utf-8")
         assert "/etc/veyon/keys/private" in eleve_tasks
         assert "state: absent" in eleve_tasks
 
     def test_student_tasks_prohibit_veyon_master(self):
         """Ensure the string 'veyon-master' is nowhere in student tasks or templates."""
-        eleve_dir = PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-eleve"
+        eleve_dir = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-eleve"
         for p in eleve_dir.rglob("*.yml"):
             assert "veyon-master" not in p.read_text(encoding="utf-8").lower()
         for p in eleve_dir.rglob("*.j2"):
@@ -205,14 +205,14 @@ class TestKeySecurityBoundaries:
 
     def test_teacher_role_secures_private_key_permissions(self):
         """Verify teacher tasks apply mode 0440 and group enseignants to the private key."""
-        prof_tasks = (PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-prof" / "tasks" / "main.yml").read_text(encoding="utf-8")
+        prof_tasks = (PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-prof" / "tasks" / "main.yml").read_text(encoding="utf-8")
         assert "mode: '0440'" in prof_tasks or 'mode: "0440"' in prof_tasks
         assert "group: enseignants" in prof_tasks
         assert "mode: '0750'" in prof_tasks or 'mode: "0750"' in prof_tasks
 
     def test_setup_veyon_keys_sh_isolation_logic(self):
         """Examine setup-veyon-keys.sh to verify rm -rf /etc/veyon/keys/private on student."""
-        script = (PROJECT_ROOT / "projects" / "lyux-ansible" / "configs" / "veyon" / "setup-veyon-keys.sh").read_text(encoding="utf-8")
+        script = (PROJECT_ROOT / "os-builder" / "lyux-ansible" / "configs" / "veyon" / "setup-veyon-keys.sh").read_text(encoding="utf-8")
         assert "rm -rf /etc/veyon/keys/private" in script
         assert "chmod 0440" in script
         assert "chmod 0444" in script
@@ -227,7 +227,7 @@ class TestPortBoundariesAndFirewall:
 
     def test_veyon_conf_ports(self):
         """Check ports in Veyon.conf.j2."""
-        conf = (PROJECT_ROOT / "projects" / "lyux-ansible" / "configs" / "veyon" / "Veyon.conf.j2").read_text(encoding="utf-8")
+        conf = (PROJECT_ROOT / "os-builder" / "lyux-ansible" / "configs" / "veyon" / "Veyon.conf.j2").read_text(encoding="utf-8")
         assert "PrimaryServicePort=11100" in conf
         assert "ServicePort=11100" in conf
         assert "FeatureWorkerPort=11200" in conf
@@ -235,8 +235,8 @@ class TestPortBoundariesAndFirewall:
 
     def test_ufw_rules_in_ansible_roles(self):
         """Verify teacher opens 11400/11100, student opens 11100/11200, neither opens illegal ports."""
-        prof_tasks = (PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-prof" / "tasks" / "main.yml").read_text(encoding="utf-8")
-        eleve_tasks = (PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-eleve" / "tasks" / "main.yml").read_text(encoding="utf-8")
+        prof_tasks = (PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-prof" / "tasks" / "main.yml").read_text(encoding="utf-8")
+        eleve_tasks = (PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-eleve" / "tasks" / "main.yml").read_text(encoding="utf-8")
 
         # Teacher needs 11400 (Demo Server to stream teacher screen) and 11100 (Service Probe)
         assert "11400" in prof_tasks
@@ -470,8 +470,8 @@ class TestPilotRoomsAndInventoryIntegrity:
 
     def test_network_objects_json_and_csv_consistency(self):
         """Cross-check network-objects.json and network-objects.csv for parity."""
-        json_path = PROJECT_ROOT / "projects" / "lyux-ansible" / "configs" / "veyon" / "network-objects.json"
-        csv_path = PROJECT_ROOT / "projects" / "lyux-ansible" / "configs" / "veyon" / "network-objects.csv"
+        json_path = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "configs" / "veyon" / "network-objects.json"
+        csv_path = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "configs" / "veyon" / "network-objects.csv"
 
         assert json_path.exists()
         assert csv_path.exists()
@@ -525,7 +525,7 @@ class TestPilotRoomsAndInventoryIntegrity:
 
     def test_pilot_rooms_subnets_isolation(self):
         """Verify B204 is on .2x IPs and S102 is on .3x IPs."""
-        json_path = PROJECT_ROOT / "projects" / "lyux-ansible" / "configs" / "veyon" / "network-objects.json"
+        json_path = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "configs" / "veyon" / "network-objects.json"
         data = json.loads(json_path.read_text(encoding="utf-8"))
 
         for c in data["NetworkObjects"]["Computers"]:

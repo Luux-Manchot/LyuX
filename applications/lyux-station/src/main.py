@@ -20,9 +20,12 @@ try:
     from veyon_manager import VeyonManager
 except ImportError:
     try:
-        from projects.lyux_station.src.veyon_manager import VeyonManager
+        from applications.lyux_station.src.veyon_manager import VeyonManager
     except ImportError:
-        VeyonManager = None
+        try:
+            from projects.lyux_station.src.veyon_manager import VeyonManager
+        except ImportError:
+            VeyonManager = None
 
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
@@ -746,10 +749,10 @@ class LyuxUnifiedApp(QMainWindow):
         )
 
     def open_welcome_tool(self):
-        os.system("python projects/lyux-welcome/src/main.py &")
+        os.system("python applications/lyux-welcome/src/main.py &")
 
     def open_report_tool(self):
-        os.system("python projects/lyux-report/src/main.py &")
+        os.system("python applications/lyux-report/src/main.py &")
 
     def open_pwd_reset(self):
         dialog = QDialog(self)

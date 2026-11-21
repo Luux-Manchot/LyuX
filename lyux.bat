@@ -1,2 +1,2 @@
 @echo off
-python "%~dp0projects\lyux-cli\lyux.py" %*
+python "%~dp0applications\lyux-cli\lyux.py" %*

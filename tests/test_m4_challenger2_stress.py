@@ -33,8 +33,8 @@ from fastapi.testclient import TestClient
 
 # Path setup
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-STATION_SRC = PROJECT_ROOT / "projects" / "lyux-station" / "src"
-SERVER_API_SRC = PROJECT_ROOT / "projects" / "lyux-server-api" / "src"
+STATION_SRC = PROJECT_ROOT / "applications" / "lyux-station" / "src"
+SERVER_API_SRC = PROJECT_ROOT / "server" / "lyux-server-api" / "src"
 
 for p in [str(STATION_SRC), str(SERVER_API_SRC)]:
     if p not in sys.path:
@@ -51,8 +51,8 @@ class TestNetworkObjectsParsingAndResilience:
 
     @pytest.fixture
     def canonical_files(self):
-        json_path = PROJECT_ROOT / "projects" / "lyux-ansible" / "configs" / "veyon" / "network-objects.json"
-        csv_path = PROJECT_ROOT / "projects" / "lyux-ansible" / "configs" / "veyon" / "network-objects.csv"
+        json_path = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "configs" / "veyon" / "network-objects.json"
+        csv_path = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "configs" / "veyon" / "network-objects.csv"
         return json_path, csv_path
 
     def test_canonical_json_schema_and_builtin_directory_structure(self, canonical_files):
@@ -433,7 +433,7 @@ class TestStationUIFastAPIIntegration:
 
     def test_station_main_call_signatures_match_veyon_manager(self):
         """Inspect lyux-station/src/main.py AST and ensure call sites match VeyonManager methods."""
-        main_path = PROJECT_ROOT / "projects" / "lyux-station" / "src" / "main.py"
+        main_path = PROJECT_ROOT / "applications" / "lyux-station" / "src" / "main.py"
         assert main_path.exists()
         content = main_path.read_text(encoding="utf-8")
 
@@ -491,7 +491,7 @@ class TestStudentProfileIsolationAndPrivilegeEscalation:
 
     def test_student_role_tasks_contain_zero_veyon_master(self):
         """Confirm that veyon-master is NEVER referenced in lyux-profile-eleve."""
-        eleve_dir = PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-eleve"
+        eleve_dir = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-eleve"
         for p in eleve_dir.rglob("*"):
             if p.is_file():
                 content = p.read_text(encoding="utf-8", errors="ignore")
@@ -499,7 +499,7 @@ class TestStudentProfileIsolationAndPrivilegeEscalation:
 
     def test_student_role_prohibits_private_key_deployment(self):
         """Confirm that no private key file exists in student role files or templates."""
-        eleve_dir = PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-eleve"
+        eleve_dir = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-eleve"
         for p in eleve_dir.rglob("*"):
             if p.is_file():
                 if "key" in p.name.lower():
@@ -510,22 +510,22 @@ class TestStudentProfileIsolationAndPrivilegeEscalation:
 
     def test_student_tasks_explicitly_delete_private_keys(self):
         """Confirm tasks in lyux-profile-eleve delete /etc/veyon/keys/private."""
-        tasks_file = PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-eleve" / "tasks" / "main.yml"
+        tasks_file = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-eleve" / "tasks" / "main.yml"
         content = tasks_file.read_text(encoding="utf-8")
         assert "/etc/veyon/keys/private" in content
         assert "state: absent" in content
 
     def test_veyon_master_desktop_shortcut_not_in_student_skel(self):
         """Confirm Veyon_Master.desktop is ONLY in lyux-profile-prof, not in student or base."""
-        prof_file = PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-prof" / "files" / "Veyon_Master.desktop"
+        prof_file = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-prof" / "files" / "Veyon_Master.desktop"
         assert prof_file.exists(), "Teacher must have Veyon_Master.desktop"
 
         # Check all other roles
         other_roles = [
-            PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-base",
-            PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-kiosk",
-            PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-eleve",
-            PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-salles",
+            PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-base",
+            PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-kiosk",
+            PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-eleve",
+            PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-salles",
         ]
         for role_dir in other_roles:
             matches = list(role_dir.rglob("*Veyon_Master*"))
@@ -533,7 +533,7 @@ class TestStudentProfileIsolationAndPrivilegeEscalation:
 
     def test_student_accounts_have_no_sudo_or_admin_privileges(self):
         """Verify in import-users-csv.py and test accounts that eleves have NO sudo groups."""
-        import_script = (PROJECT_ROOT / "projects" / "lyux-server-infra" / "scripts" / "import-users-csv.py").read_text(encoding="utf-8")
+        import_script = (PROJECT_ROOT / "server" / "lyux-server-infra" / "scripts" / "import-users-csv.py").read_text(encoding="utf-8")
 
         # In ROLE_PROFILES, "eleves" must have empty secondary_groups
         eleves_section_match = re.search(r'"eleves":\s*\{([^}]+)\}', import_script)
@@ -544,7 +544,7 @@ class TestStudentProfileIsolationAndPrivilegeEscalation:
 
     def test_setup_veyon_keys_sh_student_branch_enforces_cleanup(self):
         """Verify setup-veyon-keys.sh executes rm -rf /etc/veyon/keys/private when not teacher."""
-        script_path = PROJECT_ROOT / "projects" / "lyux-ansible" / "configs" / "veyon" / "setup-veyon-keys.sh"
+        script_path = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "configs" / "veyon" / "setup-veyon-keys.sh"
         assert script_path.exists()
         content = script_path.read_text(encoding="utf-8")
 
@@ -555,7 +555,7 @@ class TestStudentProfileIsolationAndPrivilegeEscalation:
 
     def test_terminal_shortcut_restriction_in_student_profile(self):
         """Confirm student profile disables direct terminal access via konsoleui.rc."""
-        tasks_file = PROJECT_ROOT / "projects" / "lyux-ansible" / "roles" / "lyux-profile-eleve" / "tasks" / "main.yml"
+        tasks_file = PROJECT_ROOT / "os-builder" / "lyux-ansible" / "roles" / "lyux-profile-eleve" / "tasks" / "main.yml"
         content = tasks_file.read_text(encoding="utf-8")
         assert "konsoleui.rc" in content
         assert "state: absent" in content
