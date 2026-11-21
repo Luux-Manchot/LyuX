@@ -809,8 +809,10 @@ class TestFeature22_AutomatedLabRunnerBoundaries:
 
     def test_batch_launcher_calls_powershell(self, paths):
         """22.5 Lancer-LyuX.bat et lancer-lyux.ps1 démarrent le portail web 8000 et l'application station"""
-        bat_content = (paths["root"] / "Lancer-LyuX.bat").read_text(encoding="utf-8")
-        ps1_content = (paths["root"] / "lancer-lyux.ps1").read_text(encoding="utf-8")
+        bat_path = paths["root"] / "applications" / "Lancer-LyuX.bat" if (paths["root"] / "applications" / "Lancer-LyuX.bat").exists() else paths["root"] / "Lancer-LyuX.bat"
+        ps1_path = paths["root"] / "applications" / "lancer-lyux.ps1" if (paths["root"] / "applications" / "lancer-lyux.ps1").exists() else paths["root"] / "lancer-lyux.ps1"
+        bat_content = bat_path.read_text(encoding="utf-8")
+        ps1_content = ps1_path.read_text(encoding="utf-8")
         assert "localhost:8000" in bat_content
         assert "main.py" in bat_content
         assert "localhost:8000" in ps1_content

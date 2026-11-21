@@ -9,5 +9,5 @@ echo [1/2] Ouverture du Portail Web LyuX Hub (Enrôlement Express & 2 Classes)..
 start http://localhost:8000
 echo.
 echo [2/2] Démarrage de la Station de Travail Graphique PyQt6...
-python applications\lyux-station\src\main.py
+python lyux-station\src\main.py
 pause

@@ -1,0 +1,6 @@
+# Python & Local exports
+__pycache__/
+*.py[cod]
+*.xml
+*.csv
+*.log

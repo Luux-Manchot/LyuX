@@ -833,9 +833,9 @@ class TestFeature22_AutomatedLabTestRunnerScript:
         assert ps.exists()
 
     def test_root_launchers_exist(self, paths):
-        """22.5 Vérifie les lanceurs racines Lancer-LyuX.bat et lancer-lyux.ps1"""
-        bat = paths["root"] / "Lancer-LyuX.bat"
-        ps1 = paths["root"] / "lancer-lyux.ps1"
+        """22.5 Vérifie les lanceurs Lancer-LyuX.bat et lancer-lyux.ps1"""
+        bat = paths["root"] / "applications" / "Lancer-LyuX.bat" if (paths["root"] / "applications" / "Lancer-LyuX.bat").exists() else paths["root"] / "Lancer-LyuX.bat"
+        ps1 = paths["root"] / "applications" / "lancer-lyux.ps1" if (paths["root"] / "applications" / "lancer-lyux.ps1").exists() else paths["root"] / "lancer-lyux.ps1"
         assert bat.exists()
         assert ps1.exists()
 
