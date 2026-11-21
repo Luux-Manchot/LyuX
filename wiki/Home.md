@@ -111,11 +111,7 @@ L'écosystème LyuX est découpé en dépôts spécialisés sous l'organisation 
 
 ---
 
-## 🤖 Ingénierie Système & Documentation IA
-
 <div align="center">
-
-Cette documentation technique, les modélisations d'architecture et les matrices de validation ont été formalisées et enrichies avec l'assistance de l'IA **Antigravity** (Google DeepMind).
 
 Projet conçu et développé par **FlowCreativeStudio** · Florian ([@NayrolfRdgs](https://github.com/NayrolfRdgs))  
 Contact officiel : `contact@flowcrea.fr`  
