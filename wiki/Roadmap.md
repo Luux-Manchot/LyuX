@@ -87,3 +87,7 @@ flowchart TD
 
 5. **Système de Cache Profils Hybride & Démon LRU (Issue #14)** :
    - Mise en cache intelligente des profils sur le SSD des postes basée sur les habitudes d'emploi du temps, avec démon d'éviction automatique (`lyux-cache-cleaner` : purge après 14 jours d'inactivité ou saturation à < 20 % d'espace disque).
+
+6. **Ergonomie Dolphin & Masquage Disque Système (Issue #15)** :
+   - Masquage automatique du disque dur interne (`sda1`) pour les élèves et enseignants via règles udev/udisks2 (réservé à `lyux-admin`).
+   - Intégration dans la barre latérale de Dolphin des raccourcis de classe directs (`Dépôt de devoirs`, `Distribution/Cours`) et synchronisation continue en tâche de fond.
