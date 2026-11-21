@@ -35,6 +35,8 @@ from PyQt6.QtGui import QFont, QIcon, QColor, QPixmap
 
 ACCOUNTS = {
     "lyux-admin": {"name": "Administrateur Système", "role": "admin", "classe": "IT / Maintenance", "pwd": "LyuxAdmin2026!", "room": "ALL"},
+    "lyux.eleve": {"name": "Élève Démo (LyuX)", "role": "eleve", "classe": "1G1 (Salle B204)", "pwd": "Eleve2026!", "room": "B204"},
+    "lyux.prof": {"name": "Professeur Démo (LyuX)", "role": "enseignant", "classe": "Maths / NSI", "pwd": "Prof2026!", "room": "B204"},
     "invite": {"name": "Session Invité", "role": "invite", "classe": "Sans compte (Éphémère)", "pwd": "", "room": "LOCAL"},
     "thomas.durand": {"name": "M. Durand (Maths / NSI)", "role": "enseignant", "classe": "Profs Maths", "pwd": "Prof2026!", "room": "B204"},
     "sophie.leroy": {"name": "Mme. Leroy (Sciences)", "role": "enseignant", "classe": "Profs Sciences", "pwd": "Prof2026!", "room": "S102"},

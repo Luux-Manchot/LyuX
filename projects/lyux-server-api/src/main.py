@@ -66,6 +66,9 @@ ROOM_CATALOG = {
 }
 
 TEST_USERS = [
+    {"username": "lyux-admin", "display_name": "Administrateur Système", "role": "admin", "classe": "IT / Maintenance", "password": "LyuxAdmin2026!", "room": "ALL", "app": "Console Système & Cockpit"},
+    {"username": "lyux.eleve", "display_name": "Élève Démo (LyuX)", "role": "eleve", "classe": "1G1 (B204)", "password": "Eleve2026!", "room": "B204", "app": "Thonny IDE Python & Kiosk"},
+    {"username": "lyux.prof", "display_name": "Professeur Démo (LyuX)", "role": "enseignant", "classe": "Maths / NSI", "password": "Prof2026!", "room": "B204", "app": "Veyon Master (Supervision)"},
     {"username": "lucas.martin", "display_name": "Lucas Martin", "role": "eleve", "classe": "1G1 (B204)", "password": "Eleve2026!", "room": "B204", "app": "Thonny IDE Python"},
     {"username": "emma.bernard", "display_name": "Emma Bernard", "role": "eleve", "classe": "1G1 (B204)", "password": "Eleve2026!", "room": "B204", "app": "LibreOffice Writer"},
     {"username": "hugo.dubois", "display_name": "Hugo Dubois", "role": "eleve", "classe": "1G2 (S102)", "password": "Eleve2026!", "room": "S102", "app": "Avogadro 3D Chimie"},
